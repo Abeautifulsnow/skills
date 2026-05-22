@@ -3,10 +3,10 @@ name: code-workflow
 description: >
   代码工作流编排助手。将代码审查、调试修复、提交信息生成、Git 操作四个阶段串联为完整工作流。
   当用户提到"帮我看代码"、"review 一下"、"准备提交"、"生成 commit"、"走一下提交流程"时触发。
-  依次加载并调用三个子 Skill：
-    - ~/.agents/skills/code-reviewer/SKILL.md（代码审查）
-    - ~/.agents/skills/parallel-debugging/SKILL.md（调试修复）
-    - ~/.agents/skills/git-commit/SKILL.md（提交信息生成）
+  依次加载并调用三个子 Skill(基于当前路径)：
+    - references/code-reviewer/SKILL.md（代码审查）
+    - references/parallel-debugging/SKILL.md（调试修复）
+    - references/git-commit/SKILL.md（提交信息生成）
   即使用户只说"提交代码"或"走提交流程"，也应主动触发此 Skill。
 ---
 
@@ -25,9 +25,9 @@ description: >
 
 | 子 Skill 名称    | 文件路径                                          | 在哪一步加载 |
 |------------------|---------------------------------------------------|--------------|
-| `code-reviewer`  | `~/.agents/skills/code-reviewer/SKILL.md`         | 第 2 步开始前 |
-| `parallel-debugging` | `~/.agents/skills/parallel-debugging/SKILL.md`        | 第 3 步开始前 |
-| `git-commit`     | `~/.agents/skills/git-commit/SKILL.md`            | 第 4 步开始前 |
+| `code-reviewer`  | [references/code-reviewer](references/code-reviewer/SKILL.md)         | 第 2 步开始前 |
+| `parallel-debugging` | [references/parallel-debugging](references/parallel-debugging/SKILL.md)        | 第 3 步开始前 |
+| `git-commit`     | [references/git-commit](references/git-commit/SKILL.md)            | 第 4 步开始前 |
 
 > ⚠️ **重要**：若对应路径的文件不存在，**不得跳过或伪造该步骤的执行**。
 > 必须告知用户："子 Skill `<name>` 未找到（路径：`<path>`），请确认文件已创建。"
@@ -107,8 +107,7 @@ git diff HEAD
 
 **在执行任何审查之前，必须先声明并加载子 Skill：**
 
-> 📂 正在加载子 Skill：`code-reviewer`
-> 路径：`~/.agents/skills/code-reviewer/SKILL.md`
+> 📂 正在加载子 Skill：[code-reviewer](references/code-reviewer/SKILL.md)
 
 使用 `view` 工具读取该文件，获取 `code-reviewer` 的完整执行规范。
 若文件不存在，停止并告知用户，等待处理。
@@ -179,8 +178,7 @@ git diff HEAD
 
 **在执行任何修复之前，必须先声明并加载子 Skill：**
 
-> 📂 正在加载子 Skill：`parallel-debugging`
-> 路径：`~/.agents/skills/parallel-debugging/SKILL.md`
+> 📂 正在加载子 Skill：[parallel-debugging](references/parallel-debugging/SKILL.md)
 
 使用 `view` 工具读取该文件，获取 `parallel-debugging` 的完整执行规范。
 若文件不存在，停止并告知用户，等待处理。
@@ -232,8 +230,7 @@ git diff HEAD
 
 **在生成提交信息之前，必须先声明并加载子 Skill：**
 
-> 📂 正在加载子 Skill：`git-commit`
-> 路径：`~/.agents/skills/git-commit/SKILL.md`
+> 📂 正在加载子 Skill：[git-commit](references/git-commit/SKILL.md)
 
 使用 `view` 工具读取该文件，获取 `git-commit` 的完整执行规范。
 若文件不存在，停止并告知用户，等待处理。
