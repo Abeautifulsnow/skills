@@ -1,13 +1,15 @@
 ---
 name: code-workflow
 description: >
-  代码工作流编排助手。将代码审查、调试修复、提交信息生成、Git 操作四个阶段串联为完整工作流。
+  代码工作流编排助手。将变更背景收集、代码审查、调试修复、提交信息生成、Git 操作串联为完整工作流。
   当用户提到"帮我看代码"、"review 一下"、"准备提交"、"生成 commit"、"走一下提交流程"时触发。
   依次加载并调用三个子 Skill(基于当前路径)：
     - references/code-reviewer/SKILL.md（代码审查）
     - references/parallel-debugging/SKILL.md（调试修复）
     - references/git-commit/SKILL.md（提交信息生成）
   即使用户只说"提交代码"或"走提交流程"，也应主动触发此 Skill。
+version: 1.0.0
+allowed-tools: Bash, Read
 ---
 
 # Code Workflow 编排 Skill
@@ -21,7 +23,7 @@ description: >
 
 ## 子 Skill 路径注册表
 
-本 Skill 在执行过程中会依次加载以下三个子 Skill。每个步骤开始前，**必须先用 `view` 工具读取对应路径**，以获取该 Skill 的完整执行规范，再按其规范执行。
+本 Skill 在执行过程中会依次加载以下三个子 Skill。每个步骤开始前，**必须先用 `read` 工具读取对应路径**，以获取该 Skill 的完整执行规范，再按其规范执行。
 
 | 子 Skill 名称    | 文件路径                                          | 在哪一步加载 |
 |------------------|---------------------------------------------------|--------------|
@@ -109,7 +111,7 @@ git diff HEAD
 
 > 📂 正在加载子 Skill：[code-reviewer](references/code-reviewer/SKILL.md)
 
-使用 `view` 工具读取该文件，获取 `code-reviewer` 的完整执行规范。
+使用 `read` 工具读取该文件，获取 `code-reviewer` 的完整执行规范。
 若文件不存在，停止并告知用户，等待处理。
 
 ### 2-B 执行审查
@@ -180,7 +182,7 @@ git diff HEAD
 
 > 📂 正在加载子 Skill：[parallel-debugging](references/parallel-debugging/SKILL.md)
 
-使用 `view` 工具读取该文件，获取 `parallel-debugging` 的完整执行规范。
+使用 `read` 工具读取该文件，获取 `parallel-debugging` 的完整执行规范。
 若文件不存在，停止并告知用户，等待处理。
 
 ### 3-B 执行修复
@@ -232,7 +234,7 @@ git diff HEAD
 
 > 📂 正在加载子 Skill：[git-commit](references/git-commit/SKILL.md)
 
-使用 `view` 工具读取该文件，获取 `git-commit` 的完整执行规范。
+使用 `read` 工具读取该文件，获取 `git-commit` 的完整执行规范。
 若文件不存在，停止并告知用户，等待处理。
 
 ### 4-B 生成提交信息
