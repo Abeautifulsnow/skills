@@ -5,7 +5,7 @@ description: >
   and remote Pull Requests (by ID or URL). It focuses on correctness, maintainability,
   and adherence to project standards. Covers Rust, Go, Python, TypeScript, JavaScript,
   Java, NestJS, React, Vue, Svelte with language-specific review guides.
-  When called as a sub-skill of code-workflow, receives [CHANGE_PURPOSE] and [CODE_INPUT]
+  When called as a sub-skill of review-workflow, receives [CHANGE_PURPOSE] and [CODE_INPUT]
   from the orchestrator and outputs a structured [REVIEW_REPORT] for downstream steps.
 version: 1.0.0
 allowed-tools: Bash, Read
@@ -108,7 +108,7 @@ allowed-tools: Bash, Read
 
 在深入代码之前，理解以下内容：
 
-**当作为 code-workflow 子 Skill 调用时**：
+**当作为 review-workflow 子 Skill 调用时**：
 - `[CHANGE_PURPOSE]` 和 `[PROPOSAL_INFO]` 已由编排层收集，直接使用即可
 - 如果信息缺失，按以下优先级处理：
   - 有 `[CHANGE_PURPOSE]` → 记录为审查锚点，进入 Phase 2
@@ -222,9 +222,9 @@ allowed-tools: Bash, Read
 
 ---
 
-## 输出格式（与 code-workflow 对接）
+## 输出格式（与 review-workflow 对接）
 
-当作为 code-workflow 子 Skill 调用时，输出以下结构化报告作为 `[REVIEW_REPORT]`：
+当作为 review-workflow 子 Skill 调用时，输出以下结构化报告作为 `[REVIEW_REPORT]`：
 
 ```
 ### 审查报告
@@ -271,5 +271,5 @@ allowed-tools: Bash, Read
 
 - 若存在 🔴 `[blocking]` 问题（意图层或规范层），必须暂停，询问：
   > "发现以上阻塞问题，是否忽略并继续后续步骤？"
-- 用户确认后，或无阻塞问题时，返回报告供 code-workflow 进入下一阶段。
+- 用户确认后，或无阻塞问题时，返回报告供 review-workflow 进入下一阶段。
 - 将完整报告记录为 `[REVIEW_REPORT]`。

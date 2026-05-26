@@ -8,7 +8,7 @@
 skills/
 ├── README.md
 ├── LICENSE
-└── code-workflow/                        # 代码工作流编排 Skill
+└── review-workflow/                        # 代码审查编排 Skill
     ├── SKILL.md                          # 主编排器（5 步工作流）
     └── references/
         ├── code-reviewer/                # 代码审查子 Skill
@@ -48,7 +48,7 @@ git clone https://github.com/Abeautifulsnow/skills.git ~/.pi/agent/skills
 
 ## 使用
 
-当前包含一个完整的 **代码工作流编排 Skill (`code-workflow`)**，自动触发以下完整流程：
+当前包含一个完整的 **代码审查编排 Skill (`review-workflow`)**，自动触发以下完整流程：
 
 1. **获取变更背景** — 先理解"为什么改"
 2. **代码审查** — 意图层 + 规范层双重审查，支持 9 种语言/框架

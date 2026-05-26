@@ -2,7 +2,7 @@
 name: parallel-debugging
 description: >
   Dual-mode skill for debugging and fix generation.
-  Review Fix Mode: generates concrete diff fixes for issues found in code review (used by code-workflow Step 3).
+  Review Fix Mode: generates concrete diff fixes for issues found in code review (used by review-workflow Step 3).
   Bug Investigation Mode: debugs unknown bugs using competing hypotheses with parallel investigation, evidence collection, and root cause arbitration.
 version: 1.1.0
 allowed-tools: Bash, Read
@@ -26,16 +26,16 @@ This skill operates in two modes, auto-detected from the caller's input:
 
 | Mode | Trigger | Input | Task |
 |------|---------|-------|------|
-| **Review Fix Mode** | Called by `code-workflow` Step 3 | `[REVIEW_REPORT]` — already-identified issues | Generate concrete diff fixes for each issue |
+| **Review Fix Mode** | Called by `review-workflow` Step 3 | `[REVIEW_REPORT]` — already-identified issues | Generate concrete diff fixes for each issue |
 | **Bug Investigation Mode** | Standalone debugging of unknown bugs | Symptoms, error logs, reproduction steps | Generate hypotheses, collect evidence, determine root cause |
 
 When input is a structured review report containing issues tagged with `#I`/`#C`/`#S` identifiers, operate in **Review Fix Mode**. Otherwise, operate in **Bug Investigation Mode**.
 
 ---
 
-## Review Fix Mode (code-workflow Step 3)
+## Review Fix Mode (review-workflow Step 3)
 
-When invoked by `code-workflow`, the input is a `[REVIEW_REPORT]` containing already-identified issues. The task is to generate concrete fixes — NOT to hypothesize about unknown root causes.
+When invoked by `review-workflow`, the input is a `[REVIEW_REPORT]` containing already-identified issues. The task is to generate concrete fixes — NOT to hypothesize about unknown root causes.
 
 ### Input
 
@@ -84,7 +84,7 @@ After processing all issues, bundle all fixes into `[PATCH_LIST]` — an ordered
 
 ### Quality Gate
 
-Before returning `[PATCH_LIST]` to `code-workflow`, verify:
+Before returning `[PATCH_LIST]` to `review-workflow`, verify:
 - [ ] Each fix addresses the exact issue in `[REVIEW_REPORT]`
 - [ ] No fix introduces new function-length violations (>150 lines blocking, >80 lines warning)
 - [ ] No fix introduces new `TODO`/`FIXME` without an accompanying issue reference

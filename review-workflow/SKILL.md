@@ -1,5 +1,5 @@
 ---
-name: code-workflow
+name: review-workflow
 description: >
   代码工作流编排助手。将变更背景收集、代码审查、调试修复、提交信息生成、Git 操作串联为完整工作流。
   当用户提到"帮我看代码"、"review 一下"、"准备提交"、"生成 commit"、"走一下提交流程"时触发。
