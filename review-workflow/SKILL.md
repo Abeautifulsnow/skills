@@ -8,7 +8,7 @@ description: >
     - references/parallel-debugging/SKILL.md（调试修复）
     - references/git-commit/SKILL.md（提交信息生成）
   即使用户只说"提交代码"或"走提交流程"，也应主动触发此 Skill。
-version: 1.0.0
+version: 1.0.1
 allowed-tools: Bash, Read
 ---
 
