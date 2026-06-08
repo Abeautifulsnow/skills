@@ -90,16 +90,37 @@ allowed-tools: Bash, Read
 
 ## 第 1 步：获取代码变更
 
-读取当前工作区的 git diff，等价于：
+运行脚本获取结构化的代码变更：
 
 ```bash
-git diff HEAD
+# 1. 收集 tracked diff + untracked 文件，并解析为结构化 JSON
+python scripts/diff_parse.py --collect > review_diff.json
+
+# 2. 文件分类 → 语言映射、审查规则路由
+python scripts/file_classify.py review_diff.json > review_classified.json
 ```
 
+其中：
+- `diff_parse.py --collect` 收集 `git diff HEAD` 与 untracked 文件，并解析为结构化 JSON，消除 LLM 数行号的误差。
+- `diff_parse.py --collect` 会跳过常见构建/缓存/二进制产物，并对超大 untracked 文件只记录元数据，不展开全文。
+- `file_classify.py` 按扩展名确定语言和审查规则文件，标记排除文件。
+- 脚本自动探测 git 仓库根目录，无需手动 `cd`，在任意子目录下运行结果一致。
+
+> ⚠️ 若脚本不存在，回退到直接运行 `git diff HEAD`，并用 `git ls-files --others --exclude-standard` 补充未跟踪文件列表。
 - 如果没有任何 diff 输出，提醒用户：
   > "当前仓库没有检测到任何代码变更，请确认你的修改已保存。"
   并**终止后续所有步骤**。
-- 获取成功后，将完整 diff 记录为 `[CODE_INPUT]`。
+- 获取成功后，将 `review_diff.json`（结构化 diff）和 `review_classified.json`（文件分类结果）合并记录为 `[CODE_INPUT]`。
+
+### 1-A 结构化输入使用约束
+
+后续审查必须优先使用结构化结果，避免重新让 LLM 从原始 diff 猜测：
+
+- 行号以 `review_diff.json.files[].hunks[]` 为准，不要重新手工数 diff 行。
+- 审查顺序优先使用 `review_classified.json.language_groups`。
+- `review_classified.json.files[].reviewable=false` 的文件只做摘要提示，不逐行审查。
+- `review_diff.json.files[]` 中 `is_large=true`、`is_binary=true` 或 `skipped_reason` 非空的文件只做风险提示，不要求展开内容。
+- 只有当结构化 JSON 生成失败时，才回退到原始 `git diff` 文本。
 
 ---
 
@@ -317,7 +338,7 @@ git push --force-with-lease origin <分支名>
 |--------------------|----------------|--------------|----------------------------------------|
 | `[CHANGE_PURPOSE]` | 第 0 步用户提供 | 第 2、4 步   | 变更目的，审查的意图锚点               |
 | `[PROPOSAL_INFO]`  | 第 0 步用户提供 | 第 2、4 步   | 关联提案/issue，可为空                 |
-| `[CODE_INPUT]`     | 第 1 步自动获取 | 第 2 步      | 完整 git diff                          |
+| `[CODE_INPUT]`     | 第 1 步自动获取 | 第 2 步      | 结构化 diff 与文件分类结果             |
 | `[REVIEW_REPORT]`  | 第 2 步输出     | 第 3、4 步   | 结构化审查报告                         |
 | `[PATCH_LIST]`     | 第 3 步输出     | 第 4 步      | 确认应用的修复列表                     |
 
