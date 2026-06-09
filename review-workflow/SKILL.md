@@ -90,14 +90,21 @@ allowed-tools: Bash, Read
 
 ## 第 1 步：获取代码变更
 
-运行脚本获取结构化的代码变更：
+当前skill包含有 [scripts](scripts) helper cli工具，运行里面的脚本获取结构化的代码变更：
+
+- [diff_parse.py](scripts/diff_parse.py)：收集 `git diff HEAD` 输出和 untracked 文件列表，解析为结构化 JSON，消除行号误差。
+- [file_classify.py](scripts/file_classify.py)：根据文件扩展名分类语言和审查规则，标记排除文件。
 
 ```bash
 # 1. 收集 tracked diff + untracked 文件，并解析为结构化 JSON
-python scripts/diff_parse.py --collect > review_diff.json
+python "scripts/diff_parse.py" --collect > review_diff.json
+# 或者
+python3 "scripts/diff_parse.py" --collect > review_diff.json
 
 # 2. 文件分类 → 语言映射、审查规则路由
-python scripts/file_classify.py review_diff.json > review_classified.json
+python "scripts/file_classify.py" review_diff.json > review_classified.json
+# 或者
+python3 "scripts/file_classify.py" review_diff.json > review_classified.json
 ```
 
 其中：
