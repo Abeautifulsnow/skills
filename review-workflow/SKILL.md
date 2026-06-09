@@ -8,6 +8,9 @@ description: >
     - references/parallel-debugging/SKILL.md（调试修复）
     - references/git-commit/SKILL.md（提交信息生成）
   即使用户只说"提交代码"或"走提交流程"，也应主动触发此 Skill。
+scripts:
+    diff_parse: scripts/diff_parse.py
+    file_classify: scripts/file_classify.py
 version: 1.0.1
 allowed-tools: Bash, Read
 ---
@@ -90,7 +93,7 @@ allowed-tools: Bash, Read
 
 ## 第 1 步：获取代码变更
 
-当前skill包含有 [scripts](scripts) helper cli工具，运行里面的脚本获取结构化的代码变更：
+当前skill包含有 helper cli工具，运行里面的脚本获取结构化的代码变更：
 
 - [diff_parse.py](scripts/diff_parse.py)：收集 `git diff HEAD` 输出和 untracked 文件列表，解析为结构化 JSON，消除行号误差。
 - [file_classify.py](scripts/file_classify.py)：根据文件扩展名分类语言和审查规则，标记排除文件。
